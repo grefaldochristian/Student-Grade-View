@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#065f46">
+  <meta name="description" content="Veritas College of Irosin Student Grade Viewing and Management Portal">
+  <title>Veritas College of Irosin | Grade Portal</title>
+
+  <link rel="icon" href="veritas-logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ==================== LOGIN AND REGISTRATION ==================== -->
+  <main id="auth-screen" class="auth-screen-container">
+    <div class="bg-watermark-logo" aria-hidden="true">
+  <img src="veritas-logo.png" alt="">
+</div>
+    </div>
+
+    <div class="auth-split-wrapper">
+      <section class="auth-welcome-hero">
+        <div class="hero-badge">
+          <i class="fa-solid fa-graduation-cap"></i>
+          Veritas College of Irosin
+        </div>
+
+        <h1 class="hero-title">
+          WELCOME TO THE<br>
+          <span class="hero-highlight">Student Grade Viewing</span><br>
+          <span class="hero-subhighlight">&amp; Management Portal</span>
+        </h1>
+
+        <p class="hero-description">
+          Access your academic grades, monitor your academic performance,
+          and stay updated with important announcements through one
+          convenient student portal.
+        </p>
+
+        <div class="hero-features">
+          <div class="feature-tag"><i class="fa-solid fa-shield-halved"></i> Academic Records</div>
+          <div class="feature-tag"><i class="fa-solid fa-bolt"></i> Quick Access</div>
+          <div class="feature-tag"><i class="fa-solid fa-chart-line"></i> Grade Monitoring</div>
+          <div class="feature-tag"><i class="fa-solid fa-bell"></i> Announcements</div>
+        </div>
+
+        <div class="hero-note">
+          <i class="fa-solid fa-circle-check"></i>
+          <p>
+            <strong>Your academic journey, made easier.</strong><br>
+            View grades, check academic progress, and keep track of
+            your semester performance.
+          </p>
+        </div>
+      </section>
+
+      <section class="auth-card">
+        <div class="auth-header-logo">
+        <img src="veritas-logo.png" alt="Veritas College logo">
+          <h2>Academic Grade Portal</h2>
+          <p>Sign in to continue to your account</p>
+        </div>
+
+        <div class="portal-tabs">
+          <button type="button" class="portal-tab-btn active" data-role="student">
+            <i class="fa-solid fa-user-graduate"></i> Student
+          </button>
+          <button type="button" class="portal-tab-btn" data-role="registrar">
+            <i class="fa-solid fa-user-shield"></i> Registrar
+          </button>
+        </div>
+
+        <div class="auth-mode-toggle">
+          <button type="button" id="login-mode-btn" class="mode-btn active">Login</button>
+          <button type="button" id="register-mode-btn" class="mode-btn">Sign Up</button>
+        </div>
+
+        <!-- autocomplete is switched off here; script.js hardens every field
+             so the browser never shows saved e-mail / account suggestions. -->
+        <form id="auth-form" autocomplete="off" novalidate>
+          <div class="input-group hidden" id="fullname-group">
+            <label for="auth-fullname">Full Name</label>
+            <input id="auth-fullname" type="text" maxlength="60"
+                   placeholder="e.g. Bryan Elquiero">
+          </div>
+
+          <div class="input-group hidden" id="program-group">
+            <label for="auth-program">Program / Strand</label>
+            <select id="auth-program"></select>
+          </div>
+
+          <div class="input-group hidden" id="year-group">
+            <label for="auth-year">Year Level</label>
+            <select id="auth-year"></select>
+          </div>
+
+          <div class="input-group">
+            <label for="auth-identifier" id="identifier-label">Student ID</label>
+            <div class="input-field-wrapper">
+              <i class="fa-solid fa-id-card" id="identifier-icon"></i>
+              <input id="auth-identifier" type="text" placeholder="2024-6348"
+                     inputmode="numeric" maxlength="9">
+            </div>
+            <small class="field-hint" id="identifier-hint">Numbers only, format YYYY-XXXX (example: 2024-6348).</small>
+          </div>
+
+          <div class="input-group">
+            <label for="auth-password">Password</label>
+            <div class="input-field-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input id="auth-password" class="secret-input" type="password"
+                     placeholder="Enter your password">
+              <button type="button" class="pw-toggle" data-toggle="auth-password"
+                      aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+
+          <div class="pw-strength hidden" id="pw-strength">
+            <div class="pw-meter"><span id="pw-meter-fill"></span></div>
+            <small id="pw-strength-text">Use 8+ characters with letters and numbers.</small>
+          </div>
+
+          <div class="input-group hidden" id="confirm-password-group">
+            <label for="auth-confirm-password">Confirm Password</label>
+            <div class="input-field-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input id="auth-confirm-password" class="secret-input" type="password"
+                     placeholder="Confirm your password">
+              <button type="button" class="pw-toggle" data-toggle="auth-confirm-password"
+                      aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+
+          <p id="auth-lock-note" class="auth-lock-note hidden" role="alert"></p>
+
+          <button type="submit" id="auth-submit-btn">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Login to Portal</span>
+          </button>
+        </form>
+
+        <p class="auth-footer-note">
+          <i class="fa-solid fa-circle-info"></i>
+          This is a browser-based educational prototype.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <!-- ==================== APPLICATION ==================== -->
+  <div id="app-container" class="hidden">
+    <header class="app-header">
+      <a class="brand" href="#" data-page="home">
+        <img src="veritas-logo.png" alt="Veritas College logo"
+             onerror="this.style.display='none'">
+        <span>
+          <strong>VERITAS</strong>
+          <small>COLLEGE OF IROSIN</small>
+        </span>
+      </a>
+
+      <button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button"
+              aria-label="Toggle navigation" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <nav id="app-nav" class="app-nav" aria-label="Main navigation">
+        <button type="button" class="nav-link active" data-page="home">
+          <i class="fa-solid fa-house"></i> Dashboard
+        </button>
+        <button type="button" class="nav-link" data-page="grades">
+          <i class="fa-solid fa-book-open"></i> View Grades
+        </button>
+        <button type="button" class="nav-link registrar-only hidden" data-page="manage">
+          <i class="fa-solid fa-pen-to-square"></i> Grade Encoding
+        </button>
+        <button type="button" class="nav-link registrar-only hidden" data-page="students">
+          <i class="fa-solid fa-users"></i> Students
+        </button>
+        <button type="button" class="nav-link" data-page="reports">
+          <i class="fa-solid fa-file-lines"></i> Reports
+        </button>
+        <button type="button" class="nav-link" data-page="announcements">
+          <i class="fa-solid fa-bullhorn"></i> Announcements
+        </button>
+        <button type="button" class="nav-link" data-page="faq">
+          <i class="fa-solid fa-circle-question"></i> FAQ
+        </button>
+        <button type="button" class="nav-link" data-page="about">
+          <i class="fa-solid fa-circle-info"></i> About
+        </button>
+      </nav>
+
+      <div class="header-user">
+        <button type="button" id="profile-btn" class="header-profile-btn"
+                aria-label="Open my profile">
+          <span class="user-avatar" id="header-avatar"><i class="fa-solid fa-user"></i></span>
+          <span class="header-user-details">
+            <strong id="header-user-name">User</strong>
+            <small id="header-user-role">Student</small>
+          </span>
+        </button>
+        <button type="button" id="logout-btn" class="logout-btn"
+                title="Log out" aria-label="Log out">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <!-- ============ DASHBOARD ============ -->
+      <section id="page-home" class="page-section">
+        <div class="welcome-banner">
+          <div>
+            <p class="eyebrow">VERITAS COLLEGE OF IROSIN</p>
+            <h1>Welcome back, <span id="welcome-name">Student</span>!</h1>
+            <p id="welcome-sub">Here's an overview of your academic portal.</p>
+          </div>
+          <div class="welcome-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        </div>
+
+        <div id="stats-grid" class="stats-grid"></div>
+
+        <div id="quick-actions" class="quick-actions"></div>
+
+        <div class="content-grid">
+          <section class="content-card">
+            <div class="card-title-row">
+              <div>
+                <h2 id="recent-title">Recent Grades</h2>
+                <p class="muted">Latest academic records</p>
+              </div>
+              <button type="button" class="btn btn-outline" data-page="grades">View All</button>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr><th>Subject</th><th>Grade</th><th>Remarks</th></tr>
+                </thead>
+                <tbody id="recent-grades-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-card">
+            <div class="card-title-row">
+              <div>
+                <h2>Grade Distribution</h2>
+                <p class="muted" id="summary-note">Statistics appear when records are available.</p>
+              </div>
+            </div>
+            <div id="grade-summary" class="grade-summary"></div>
+          </section>
+        </div>
+
+        <div class="content-grid">
+          <section class="content-card">
+            <div class="card-title-row">
+              <div>
+                <h2>Semester Summary</h2>
+                <p class="muted">Weighted average per academic period</p>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr><th>Period</th><th class="num">Subjects</th><th class="num">Units</th><th class="num">GWA</th><th>Standing</th></tr>
+                </thead>
+                <tbody id="semester-summary-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-card">
+            <div class="card-title-row">
+              <div>
+                <h2 id="insight-title">Academic Standing</h2>
+                <p class="muted">Based on weighted average</p>
+              </div>
+            </div>
+            <div id="insight-body"></div>
+          </section>
+        </div>
+
+        <section class="content-card announcement-preview">
+          <div class="card-title-row">
+            <div>
+              <h2>Latest Announcements</h2>
+              <p class="muted">Updates from the portal</p>
+            </div>
+            <button type="button" class="btn btn-outline" data-page="announcements">View Announcements</button>
+          </div>
+          <div id="home-announcements" class="announcement-list"></div>
+        </section>
+      </section>
+
+      <!-- ============ VIEW GRADES ============ -->
+      <section id="page-grades" class="page-section hidden">
+        <div class="page-heading">
+          <p class="eyebrow">ACADEMIC RECORDS</p>
+          <h1>Academic Grade Report</h1>
+          <p>Search, filter and review subject grades.</p>
+        </div>
+
+        <section class="content-card">
+          <div class="print-only" id="grades-print-header"></div>
+
+          <div class="filter-grid cols-4">
+            <div class="input-group">
+              <label for="grade-search">Search subject</label>
+              <input type="search" id="grade-search" placeholder="Code or description">
+            </div>
+            <div class="input-group">
+              <label for="semester-filter">Semester</label>
+              <select id="semester-filter">
+                <option value="all">All Semesters</option>
+                <option value="1st Semester">1st Semester</option>
+                <option value="2nd Semester">2nd Semester</option>
+                <option value="Summer">Summer</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="school-year-filter">School Year</label>
+              <select id="school-year-filter"><option value="all">All School Years</option></select>
+            </div>
+            <div class="input-group">
+              <label for="grade-sort">Sort by</label>
+              <select id="grade-sort">
+                <option value="period">Academic period</option>
+                <option value="code">Subject code</option>
+                <option value="grade-asc">Grade (best first)</option>
+                <option value="grade-desc">Grade (lowest first)</option>
+              </select>
+            </div>
+            <div class="input-group registrar-filter hidden" id="student-filter-group">
+              <label for="student-filter">Student</label>
+              <select id="student-filter"><option value="all">All Students</option></select>
+            </div>
+          </div>
+
+          <div class="grade-report-info">
+            <span><i class="fa-solid fa-user-graduate"></i> <strong id="report-student-name">Student</strong></span>
+           
+            <span><i class="fa-solid fa-layer-group"></i> <span id="report-program">Program</span></span>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject Code</th>
+                  <th>Description</th>
+                  <th class="num">Units</th>
+                  <th class="num">Grade</th>
+                  <th>Semester</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="grades-table-body"></tbody>
+            </table>
+          </div>
+
+          <div id="grades-summary" class="summary-strip"></div>
+
+          <div class="table-footer">
+            <span id="grade-result-count">0 records</span>
+            <div class="btn-row no-print">
+              <button type="button" id="export-grades-btn" class="btn btn-outline">
+                <i class="fa-solid fa-file-csv"></i> Export CSV
+              </button>
+              <button type="button" id="print-grades-btn" class="btn btn-primary">
+                <i class="fa-solid fa-print"></i> Print Grades
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ GRADE ENCODING (REGISTRAR) ============ -->
+      <section id="page-manage" class="page-section hidden">
+        <div class="page-heading">
+          <p class="eyebrow">REGISTRAR WORKSPACE</p>
+          <h1>Grade Encoding &amp; Computation</h1>
+          <p>Encode term scores and the final grade is computed automatically. You can also edit or delete records.</p>
+        </div>
+
+        <section class="content-card">
+          <h2 id="grade-form-title">Add Grade Record</h2>
+
+          <form id="grade-form" autocomplete="off" novalidate>
+            <input type="hidden" id="grade-record-id">
+
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="grade-student-id">Student</label>
+                <select id="grade-student-id"><option value="">Select a student</option></select>
+              </div>
+              <div class="input-group">
+                <label for="grade-subject-code">Subject Code</label>
+                <input id="grade-subject-code" type="text" placeholder="e.g. IT101" maxlength="20">
+              </div>
+              <div class="input-group">
+                <label for="grade-description">Subject Description</label>
+                <input id="grade-description" type="text" placeholder="e.g. Introduction to Computing" maxlength="80">
+              </div>
+              <div class="input-group">
+                <label for="grade-units">Units</label>
+                <input id="grade-units" type="number" min="1" max="12" value="3">
+              </div>
+              <div class="input-group">
+                <label for="grade-semester">Semester</label>
+                <select id="grade-semester">
+                  <option value="1st Semester">1st Semester</option>
+                  <option value="2nd Semester">2nd Semester</option>
+                  <option value="Summer">Summer</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label for="grade-school-year">School Year</label>
+                <input id="grade-school-year" type="text" placeholder="2025-2026" value="2025-2026" maxlength="9">
+              </div>
+              <div class="input-group">
+                <label for="grade-method">Encoding method</label>
+                <select id="grade-method">
+                  <option value="scores">Compute from term scores (automatic)</option>
+                  <option value="direct">Enter the final grade directly</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="score-fields">
+              <div class="score-grid">
+                <div class="input-group">
+                  <label for="grade-prelim">Prelim score (30%)</label>
+                  <input id="grade-prelim" type="number" min="0" max="100" step="0.01" placeholder="0 - 100">
+                </div>
+                <div class="input-group">
+                  <label for="grade-midterm">Midterm score (30%)</label>
+                  <input id="grade-midterm" type="number" min="0" max="100" step="0.01" placeholder="0 - 100">
+                </div>
+                <div class="input-group">
+                  <label for="grade-final">Final exam score (40%)</label>
+                  <input id="grade-final" type="number" min="0" max="100" step="0.01" placeholder="0 - 100">
+                </div>
+              </div>
+            </div>
+
+            <div id="direct-grade-field" class="input-group hidden">
+              <label for="grade-value">Final grade (1.00 to 5.00)</label>
+              <input id="grade-value" type="number" min="1" max="5" step="0.25" placeholder="e.g. 1.75">
+            </div>
+
+            <div id="grade-preview" class="grade-preview is-empty">Enter the scores to see the computed final grade.</div>
+            <p class="scale-note">
+              Scale: 97-100 = 1.00 &middot; 94-96 = 1.25 &middot; 91-93 = 1.50 &middot; 88-90 = 1.75 &middot;
+              85-87 = 2.00 &middot; 82-84 = 2.25 &middot; 79-81 = 2.50 &middot; 76-78 = 2.75 &middot;
+              75 = 3.00 &middot; below 75 = 5.00 (failed).
+            </p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span id="grade-save-label">Save Grade</span>
+              </button>
+              <button type="button" id="cancel-grade-edit" class="btn btn-light">Cancel</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card">
+          <div class="card-title-row">
+            <div>
+              <h2>Grade Records</h2>
+              <p class="muted">View, update or delete saved records</p>
+            </div>
+            <button type="button" id="export-manage-btn" class="btn btn-outline">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+          </div>
+
+          <div class="filter-grid">
+            <div class="input-group">
+              <label for="manage-grade-search">Search</label>
+              <input type="search" id="manage-grade-search" placeholder="Student, ID or subject">
+            </div>
+            <div class="input-group">
+              <label for="manage-semester-filter">Academic period</label>
+              <select id="manage-semester-filter"><option value="all">All periods</option></select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Subject</th>
+                  <th class="num">Units</th>
+                  <th class="num">Final %</th>
+                  <th class="num">Grade</th>
+                  <th>Period</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="manage-grades-body"></tbody>
+            </table>
+          </div>
+          <div id="manage-summary" class="summary-strip"></div>
+        </section>
+      </section>
+
+      <!-- ============ STUDENT INFORMATION (REGISTRAR) ============ -->
+      <section id="page-students" class="page-section hidden">
+        <div class="page-heading">
+          <p class="eyebrow">REGISTRAR WORKSPACE</p>
+          <h1>Student Information Management</h1>
+          <p>Add, update and remove student records.</p>
+        </div>
+
+        <section class="content-card">
+          <h2 id="student-form-title">Add Student</h2>
+
+          <form id="student-form" autocomplete="off" novalidate>
+            <input type="hidden" id="student-record-id">
+
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="stu-id">Student ID</label>
+                <input id="stu-id" type="text" inputmode="numeric" maxlength="9" placeholder="2024-6348">
+                <small class="field-hint">Numbers only, format YYYY-XXXX.</small>
+              </div>
+              <div class="input-group">
+                <label for="stu-name">Full Name</label>
+                <input id="stu-name" type="text" maxlength="60" placeholder="e.g. Bryan Elquiero">
+              </div>
+              <div class="input-group">
+                <label for="stu-program">Program / Strand</label>
+                <select id="stu-program"></select>
+              </div>
+              <div class="input-group">
+                <label for="stu-year">Year Level</label>
+                <select id="stu-year"></select>
+              </div>
+              <div class="input-group">
+                <label for="stu-email">E-mail (optional)</label>
+                <input id="stu-email" type="text" maxlength="80" placeholder="name@example.com">
+              </div>
+              <div class="input-group">
+                <label for="stu-contact">Mobile number (optional)</label>
+                <input id="stu-contact" type="text" inputmode="numeric" maxlength="11" placeholder="09XXXXXXXXX">
+              </div>
+              <div class="input-group">
+                <label for="stu-status">Status</label>
+                <select id="stu-status">
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="Graduated">Graduated</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span id="student-save-label">Save Student</span>
+              </button>
+              <button type="button" id="cancel-student-edit" class="btn btn-light">Cancel</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="content-card">
+          <div class="card-title-row">
+            <div>
+              <h2>Student Records</h2>
+              <p class="muted">Search and manage enrolled students</p>
+            </div>
+            <button type="button" id="export-students-btn" class="btn btn-outline">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+          </div>
+
+          <div class="filter-grid">
+            <div class="input-group">
+              <label for="student-search">Search</label>
+              <input type="search" id="student-search" placeholder="Name or student ID">
+            </div>
+            <div class="input-group">
+              <label for="student-program-filter">Program</label>
+              <select id="student-program-filter"><option value="all">All Programs</option></select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Program</th>
+                  <th>Year</th>
+                  <th>Status</th>
+                  <th>Account</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="students-body"></tbody>
+            </table>
+          </div>
+          <div id="students-summary" class="summary-strip"></div>
+        </section>
+      </section>
+
+      <!-- ============ REPORTS ============ -->
+      <section id="page-reports" class="page-section hidden">
+        <div class="page-heading">
+          <p class="eyebrow">ACADEMIC REPORTS</p>
+          <h1>Generate Reports</h1>
+          <p>Create printable reports and export them to CSV.</p>
+        </div>
+
+        <section class="content-card no-print">
+          <div class="filter-grid cols-3">
+            <div class="input-group">
+              <label for="report-type">Report type</label>
+              <select id="report-type"></select>
+            </div>
+            <div class="input-group" id="report-student-group">
+              <label for="report-student">Student</label>
+              <select id="report-student"></select>
+            </div>
+            <div class="input-group" id="report-period-group">
+              <label for="report-period">Academic period</label>
+              <select id="report-period"><option value="all">All periods</option></select>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" id="export-report-btn" class="btn btn-outline">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+            <button type="button" id="print-report-btn" class="btn btn-primary">
+              <i class="fa-solid fa-print"></i> Print Report
+            </button>
+          </div>
+        </section>
+
+        <section class="content-card" id="report-output"></section>
+      </section>
+
+      <!-- ============ ANNOUNCEMENTS ============ -->
+      <section id="page-announcements" class="page-section hidden">
+        <div class="page-heading">
+          <p class="eyebrow">STUDENT INFORMATION</p>
+          <h1>Announcements</h1>
+          <p>Read important portal reminders and academic updates.</p>
+        </div>
+
+        <section class="content-card">
+          <div id="announcement-list" class="announcement-list"></div>
+        </section>
+
+        <section class="content-card registrar-only hidden" id="announcement-admin">
+          <h2>Publish Announcement</h2>
+          <form id="announcement-form" autocomplete="off" novalidate>
+            <div class="input-group">
+              <label for="announcement-title">Title</label>
+              <input id="announcement-title" maxlength="120" placeholder="Announcement title">
+            </div>
+            <div class="input-group">
+              <label for="announcement-message">Message</label>
+              <textarea id="announcement-message" rows="4" maxlength="600" placeholder="Write your announcement"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-paper-plane"></i> Publish
+            </button>
+          </form>
+        </section>
+      </section>
+
+      <!-- ============ FAQ ============ -->
+      <section id="page-faq" class="page-section hidden">
+        <div class="page-heading">
+          <p class="eyebrow">HELP CENTER</p>
+          <h1>Frequently Asked Questions</h1>
+          <p>Quick answers about using the grade portal.</p>
+        </div>
+
+        <section class="content-card faq-list">
+          <details>
+            <summary>How do I register?</summary>
+            <p>Select Student, choose Sign Up, and enter your full name (first and last name),
+              student ID (numbers only, like 2024-6348), program, year level and password.</p>
+          </details>
+          <details>
+            <summary>How can I view my grades?</summary>
+            <p>Log in with your registered student ID and password, then open View Grades.
+              You can search, filter by semester or school year, print or export your grades.</p>
+          </details>
+          <details>
+            <summary>How is the final grade computed?</summary>
+            <p>The registrar encodes Prelim (30%), Midterm (30%) and Final exam (40%) scores.
+              The portal computes the final percentage and converts it to the 1.00 - 5.00 scale automatically.
+              Your GWA is the average of all grades weighted by subject units.</p>
+          </details>
+          <details>
+            <summary>What does a passing grade mean?</summary>
+            <p>Grades from 1.00 to 3.00 are passing. Grades above 3.00 are failing.
+              Confirm the official grading policy with your registrar.</p>
+          </details>
+          <details>
+            <summary>What is Dean's List standing?</summary>
+            <p>In this portal, a weighted average of 1.75 or better with no grade lower than 2.50 shows as Dean's List.</p>
+          </details>
+          <details>
+            <summary>Can I change my grades as a student?</summary>
+            <p>No. Grade encoding is available only to registrar accounts. Students can update their own e-mail,
+              mobile number and password from My Profile.</p>
+          </details>
+          <details>
+            <summary>How is my account protected?</summary>
+            <p>Passwords are stored as salted hashes, repeated wrong logins temporarily lock the form,
+              and you are signed out after 15 minutes of inactivity. This is still a browser-only prototype.</p>
+          </details>
+          <details>
+            <summary>Is this portal secure for official grades?</summary>
+            <p>No. A front-end-only demonstration cannot securely protect academic records.
+              Do not store confidential or official records in this prototype.</p>
+          </details>
+        </section>
+      </section>
+
+      <!-- ============ ABOUT ============ -->
+      <section id="page-about" class="page-section hidden">
+        <div class="page-heading">
+          <p class="eyebrow">ABOUT THE PROJECT</p>
+          <h1>About Veritas College of Irosin</h1>
+          <p>Student Grade Viewing &amp; Management Portal</p>
+        </div>
+
+        <section class="content-card">
+          <h2>Project Overview</h2>
+          <p>
+            The Student Grade Viewing &amp; Management Portal is a demonstration web application
+            designed to organize student information and academic grades through a simple interface.
+          </p>
+
+          <h3>Features</h3>
+          <ul class="about-list">
+            <li>Student information management (add, update, delete).</li>
+            <li>Grade encoding with automatic final grade and GWA computation.</li>
+            <li>Searchable, filterable and sortable grade records.</li>
+            <li>Printable and exportable reports.</li>
+            <li>Secure-style login with lockout, hashed passwords and idle sign-out.</li>
+            <li>Responsive desktop and mobile layouts.</li>
+          </ul>
+
+          <h3>Technologies Used</h3>
+          <p>HTML5, CSS3, Vanilla JavaScript, localStorage, and sessionStorage.</p>
+
+          <h3>Data and Security Notice</h3>
+          <p>
+            This is a client-side educational prototype, not a production student information system.
+            Data stored in browser storage is not protected like server-side records.
+          </p>
+        </section>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>&copy; 2026 Veritas College of Irosin.</p>
+      <p>Student Grade Viewing &amp; Management Portal</p>
+    </footer>
+  </div>
+
+  <!-- ==================== DIALOGS ==================== -->
+  <div id="modal-confirm" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-box modal-narrow">
+      <div class="confirm-body">
+        <div class="confirm-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3 id="confirm-title">Are you sure?</h3>
+        <p id="confirm-message"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="confirm-no" class="btn btn-light">Cancel</button>
+        <button type="button" id="confirm-yes" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-profile" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="profile-title"><i class="fa-solid fa-id-badge"></i> My Profile</h3>
+        <button type="button" class="close-modal-btn" data-close="modal-profile" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-head">
+          <span class="profile-avatar" id="profile-avatar">U</span>
+          <div>
+            <strong id="profile-name"></strong>
+            <small id="profile-role"></small>
+          </div>
+        </div>
+        <dl class="profile-list" id="profile-details"></dl>
+
+        <div id="contact-section">
+          <hr class="divider">
+          <h4 class="form-subtitle"><i class="fa-solid fa-address-card"></i> Contact information</h4>
+          <form id="contact-form" autocomplete="off" novalidate>
+            <div class="input-group">
+              <label for="profile-email">E-mail</label>
+              <input id="profile-email" type="text" maxlength="80" placeholder="name@example.com">
+            </div>
+            <div class="input-group">
+              <label for="profile-contact">Mobile number</label>
+              <input id="profile-contact" type="text" inputmode="numeric" maxlength="11" placeholder="09XXXXXXXXX">
+            </div>
+            <button type="submit" class="btn btn-primary btn-small"><i class="fa-solid fa-floppy-disk"></i> Save contact</button>
+          </form>
+        </div>
+
+        <hr class="divider">
+        <h4 class="form-subtitle"><i class="fa-solid fa-key"></i> Change password</h4>
+        <form id="password-form" autocomplete="off" novalidate>
+          <div class="input-group">
+            <label for="pw-current">Current password</label>
+            <div class="input-field-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input id="pw-current" class="secret-input" type="password">
+              <button type="button" class="pw-toggle" data-toggle="pw-current" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="pw-new">New password</label>
+            <div class="input-field-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input id="pw-new" class="secret-input" type="password">
+              <button type="button" class="pw-toggle" data-toggle="pw-new" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+            </div>
+            <small class="field-hint">At least 8 characters with letters and numbers.</small>
+          </div>
+          <div class="input-group">
+            <label for="pw-confirm">Confirm new password</label>
+            <div class="input-field-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input id="pw-confirm" class="secret-input" type="password">
+              <button type="button" class="pw-toggle" data-toggle="pw-confirm" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-small"><i class="fa-solid fa-key"></i> Update password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sample grade data must load before the main JavaScript -->
+  <script src="grade-dataset.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
